@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <title>RePlenty</title>
+</head>
+
+<style>
+    body {
+        /* background: linear-gradient(90deg, rgb(13, 42, 172) 0%, rgba(0,212,255,1) 100%); */
+        background: linear-gradient(90deg, rgba(122,211,88,1) 0%, rgba(158,215,51,1) 50%, rgb(153, 226, 18) 100%);
+    }
+    
+    #wrap {
+        overflow: hidden;
+        text-align: center;
+        padding: 25px 25px;
+        position: fixed;
+        top: 100px;
+        left: 27.5%;
+        width: 45%; /* 600 */
+        height: 65%;
+        margin: auto;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    
+</style>
+
+
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color: #24383d;">
+        <a class="navbar-brand" href="/" style="color: #9ed733;">RePlenty</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {% if not isLoggedIn %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    
+    
+    <div id="wrap">
+
+        
+
+        <BR>
+        <h4 style="text-align: center">Welcome Back!</h4>
+        <p style="text-align: center">
+            If you don't have an account,
+            <a class="link" style="color: #9ed733;" href="/register">register here!</a>
+        </p>
+            
+        <form action="{{ url_for('login') }}" method="post">
+            <div class="form-group">
+                <div>
+                    <label style="padding-right: 385px;" for="exampleInputEmail1">Email</label>
+                    <div style="padding: 0px 90px;">
+                        <input type="text" class="form-control" name="em" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="padding: 0px 90px;">
+                    <label style="padding-right: 360px;" for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" name="pw" id="exampleInputPassword1">
+                </div>
+                <div style="padding: 30px 170px 10px 170px">
+                    <button type="submit" class="btn btn-success" style="background: linear-gradient(90deg, rgba(122,211,88,1) 0%, rgba(158,215,51,1) 100%); box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">Login</button>
+                </div>
+            </div>
+        </form>
+        
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+            
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        
+        
+    </body>
+    </html>

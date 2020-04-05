@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <title>RePlenty</title>
+</head>
+
+{% if isLoggedIn %}
+<style>
+    body {
+        /* background: linear-gradient(90deg, rgb(13, 42, 172) 0%, rgba(0,212,255,1) 100%); */
+        background: linear-gradient(90deg, rgba(122,211,88,1) 0%, rgba(158,215,51,1) 50%, rgb(153, 226, 18) 100%);
+    }
+    
+    #wrap {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        text-align: center;
+        padding: 0px 25px 0px 25px;
+        position: fixed;
+        top: 150px;
+        left: 22.5%; /* (100 - width)/2 */
+        width: 55%; /* 600 */
+        height: 30%;
+        margin: auto;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    
+    .request {
+        overflow: hidden;
+        text-align: left;
+        padding: 30px 25px 0px 25px;
+        /* position: relative;
+        top: 350px; */
+        left: 30%; /* (100 - width)/2 */
+        width: 80%; /* 600 */
+        height: auto; /* 30%; */
+        margin: auto;
+        background: linear-gradient(90deg, rgba(122,211,88,1) 0%, rgba(158,215,51,1) 100%);
+        border-radius: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    
+</style>
+{% else %}
+<style>
+    body {
+        /* background: linear-gradient(90deg, rgb(13, 42, 172) 0%, rgba(0,212,255,1) 100%); */
+        background: linear-gradient(90deg, rgba(122,211,88,1) 0%, rgba(158,215,51,1) 50%, rgb(153, 226, 18) 100%);
+    }
+    
+    #wrap {
+        overflow: hidden;
+        text-align: center;
+        padding: 75px 25px 0px 25px;
+        position: fixed;
+        top: 150px;
+        left: 22.5%; /* (100 - width)/2 */
+        width: 55%; /* 600 */
+        height: 30%;
+        margin: auto;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    
+    
+</style>
+{% endif %}
+
+
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color: #24383d;">
+        <a class="navbar-brand" href="/" style="color: #9ed733;">RePlenty</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
+                </li>
+                {% if isLoggedIn %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                {% endif %}
+                
+            </ul>
+        </div>
+    </nav>
+    
+    
+    <div id="wrap">
+        
+        {% if not isLoggedIn %}
+        
+        <h4 style="text-align: center">Welcome to RePlenty!</h4>
+        <p style="text-align: center">
+            To get started, either <a class="link" style="color: #85b32f;" href="/login">login</a> or <a class="link" style="color: #85b32f;" href="/register">register!</a>
+        </p>
+        
+        {% else %}
+        
+        <h3 style="padding-top: 50px; margin-left: -450px;">Welcome, {{ currentUser["name"] }}</h3>
+        
+        <div id="selector" class="input-group mb-3" style="left: 100px; padding-top: 35px;">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">What do you Want to Do?</label>
+            </div>
+            <select class="custom-select" id="inputGroupSelect01" onchange="optionSelect()" style="max-width: 400px;">
+                <option selected>Choose...</option>
+                <option value="donate">Donate to Someone</option>
+                <option value="request">Request a Donation</option>
+            </select>
+        </div>
+        
+        <div id="requestList" style="display: none;">
+            <h4 style="padding-top: 50px;">Donation Requests:</h4>
+            {% for request in requests %}
+            
+            <div class="request" style="margin-top: 50px; margin-bottom: 50px;">
+                <h5>{{ request.get("title") }}</h4>
+                    <p style="overflow-wrap: break-word;">{{ request.get("desc") }}</p>
+                    <h6>Contact:</h6>
+                    <p>Phone Number: {{ request.get("user").get("phone_num") }}<br>Email: {{ request.get("user").get("email") }}</p>
+                    
+                    <h6 style="padding: 40px 0px 20px 0px;">Requested by {{ request.get("user").get("name") }} at {{ request.get("date") }}</h6>
+                </div>
+                
+                {% endfor %}
+            </div>
+            
+            <div id="makeRequest" style="display: none; padding-right: 50px; padding-left: 50px;">
+                
+                <h4 style="padding-top: 30px; padding-bottom: 20px;">Donation Request:</h4>
+                
+                <form action="{{ url_for('index') }}" method="post" style="padding-bottom: 30px;">
+                    <div class="form-group" style="text-align: left;">
+                        <label for="exampleFormControlInput1">Item Requested</label>
+                        <input type="text" class="form-control" name="item_name" id="exampleFormControlInput1" placeholder="Toliet paper, groceries, etc.">
+                    </div>
+                    <div class="form-group" style="text-align: left;">
+                        <label for="exampleFormControlSelect1">Item Type</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <option selected>Choose...</option>
+                            <option>Food (groceries, restaurant food, etc.)</option>
+                            <option>Toiletries (toilet paper, toothbrush, soap, etc.)</option>
+                            <option>Household Supplies (cleaning sprays, wipes, hand sanitizer, etc.)</option>
+                            <option>Clothes (T-shirts, jeans, shoes, etc.)</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group"  style="text-align: left;">
+                        <label for="exampleFormControlTextarea1">Description</label>
+                        <textarea class="form-control" name="item_desc" id="exampleFormControlTextarea1" rows="3" placeholder="I am in need of..."></textarea>
+                        <div style="text-align: center; padding-top: 30px;">
+                            <button type="submit" class="btn btn-success" style="background: linear-gradient(90deg, rgba(122,211,88,1) 0%, rgba(158,215,51,1) 100%); box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">Post</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            {% endif %}
+            
+        </div>
+        
+        <script>
+            
+            
+            function optionSelect() {
+                var requests = document.getElementById("requestList")
+                var requestForm = document.getElementById("makeRequest")
+                var body = document.getElementById("wrap");
+                var option = document.getElementById("inputGroupSelect01").value;
+                
+                if (option == "donate") {
+                    body.style.height = "70%"
+                    body.style.top = "130px"
+                    requests.style.display = "block";
+                    requestForm.style.display = "none"
+                } else if(option == "request") {
+                    body.style.height = "70%"
+                    body.style.top = "130px"
+                    requests.style.display = "none";
+                    requestForm.style.display = "block"
+                } else {
+                    body.style.height = "30%"
+                    requests.style.display = "none";
+                    requestForm.style.display = "none"
+                }
+                
+            }
+            
+            function addElement(parentId, elementTag, elementId, html) {
+                // Adds an element to the document
+                var p = document.getElementById(parentId);
+                var newElement = document.createElement(elementTag);
+                newElement.setAttribute('id', elementId);
+                newElement.innerHTML = html;
+                p.appendChild(newElement);
+            }
+            
+            function removeElement(elementId) {
+                // Removes an element from the document
+                var element = document.getElementById(elementId);
+                element.parentNode.removeChild(element);
+            }
+            
+        </script>
+        
+        
+        
+        
+        
+        
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        
+        
+    </body>
+    </html>
